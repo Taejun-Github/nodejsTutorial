@@ -1,16 +1,16 @@
 const express = require('express');
+const User = require('../models/user');
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Express'})
-}, function(req, res, next) {
-  console.log('실행되지 않음');
-  next();
+router.get('/', async(req, res, next) => {
+  try {
+   const users = await User.findAll();
+   res.render('sequelize', {users}); 
+   // sequelize.html 을 렌더링할 때 결과값인 users를 넣는다.
+  } catch (error) {
+    console.error(error);
+    next(err);
+  }
 });
 
-router.get('/', function(req, res) {
-  console.log('실행됩니다');
-  res.send('Hello, Express');
-})
-
-export default router;
+module.exports = router;
